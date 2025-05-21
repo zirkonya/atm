@@ -22,10 +22,8 @@ fn main() {
         };
         match atm.withdraw(amount) {
             Ok(denomination) => {
-                println!("You got : {}", denomination.iter().map(|denomination| {
-                    format!("{}x{}€", denomination.amount, denomination.value)
-                }).collect::<Vec<String>>().join(" and "))
-            },
+                println!("You got : {}", denomination.iter().map(|denomination| format!("{}", denomination)).collect::<Vec<String>>().join(" and "));
+            }
             Err(AtmError::AtmIsEmpty) => {
                 eprintln!("Atm is now empty");
                 break;

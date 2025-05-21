@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use crate::error::AtmError;
 
 #[derive(Debug, Default, Clone)]
@@ -9,6 +11,12 @@ pub struct Denomination {
 impl Denomination {
     pub const fn new(value: u32, amount: u32) -> Self {
         Self { value, amount }
+    }
+}
+
+impl Display for Denomination {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}x{}€", self.amount, self.value)
     }
 }
 
