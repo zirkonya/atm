@@ -16,22 +16,21 @@ fn main() {
             eprintln!("{}", line.err().unwrap());
             continue;
         };
-        match u32::from_str_radix(&line, 10) {
-            Ok(amount) => {
-                match atm.withdraw(amount) {
-                    Ok(denomination) => {
-                        println!("You got : {}", denomination.iter().map(|denomination| {
-                            format!("{}x{}€", denomination.amount, denomination.value)
-                        }).collect::<Vec<String>>().join(" and "))
-                    },
-                    Err(err) if err == AtmError::AtmIsEmpty => {
-                        eprintln!("You can't withdraw : {}", err);
-                        break;
-                    }
-                    Err(err) => eprintln!("You can't withdraw : {}", err),
-                }
+        let Ok(amount) = line.parse::<u32>() else {
+            eprintln!("\x1b[31mPlease enter a number !\x1b[m");
+            continue;
+        };
+        match atm.withdraw(amount) {
+            Ok(denomination) => {
+                println!("You got : {}", denomination.iter().map(|denomination| {
+                    format!("{}x{}€", denomination.amount, denomination.value)
+                }).collect::<Vec<String>>().join(" and "))
             },
-            Err(_) => eprintln!("\x1b[31mPlease enter a number !\x1b[m"),
+            Err(AtmError::AtmIsEmpty) => {
+                eprintln!("Atm is now empty");
+                break;
+            }
+            Err(err) => eprintln!("You can't withdraw : {}", err),
         }
         println!("How much do you want to withdraw ?");
     }
